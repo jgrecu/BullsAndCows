@@ -9,30 +9,41 @@ public class Main {
 
     public static void main(String[] args) {
         int turn = 0;
-        int secretLength;
-        int symbolsLength;
+        int secretLength = 1;
+        int symbolsLength = 1;
 
-        while (true) {
-            System.out.println("Please, enter the secret code's length: ");
+        System.out.println("Please, enter the secret code's length: ");
+        String input = scanner.nextLine();
 
-            secretLength =  Integer.parseInt(scanner.nextLine());
-            if (secretLength <= MAX_SIZE) {
-                break;
-            } else {
-                System.out.println("Error: can't generate a secret number with a length of " + secretLength +
-                        " because there aren't enough unique digits.");
+        try {
+            secretLength = Integer.parseInt(input);
+            if (secretLength > MAX_SIZE || secretLength < 1) {
+                System.out.println("Error: maximum number of possible symbols in the code is 36 (0-9, a-z).");
+                System.exit(0);
             }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: \"" + input + "\" isn't a valid number.");
+            System.exit(0);
         }
-        while (true) {
-            System.out.println("Input the number of possible symbols in the code: ");
 
-            symbolsLength =  Integer.parseInt(scanner.nextLine());
-            if (symbolsLength <= MAX_SIZE) {
-                break;
-            } else {
-                System.out.println("Error: can't generate a secret number with a length of " + symbolsLength +
-                        " because there aren't enough unique digits.");
+        System.out.println("Input the number of possible symbols in the code: ");
+        input = scanner.nextLine();
+
+        try {
+            symbolsLength = Integer.parseInt(input);
+            if (symbolsLength > MAX_SIZE || symbolsLength < 1) {
+                System.out.println("Error: maximum number of possible symbols in the code is 36 (0-9, a-z).");
+                System.exit(0);
             }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: \"" + input + "\" isn't a valid number.");
+            System.exit(0);
+        }
+
+        if (secretLength > symbolsLength) {
+            System.out.println("Error: it's not possible to generate a code with a length of " + secretLength + " " +
+                    "with " + symbolsLength + " unique symbols.");
+            System.exit(0);
         }
 
         String randomSecret = getRandomSecret(secretLength, symbolsLength);
@@ -55,7 +66,6 @@ public class Main {
 
         for (int i = 0; i < guess.length(); i++) {
             int index = randNum.indexOf(guess.charAt(i));
-            //System.out.println(guess.charAt(i) + " " + index);
             if (index == i) {
                 bulls++;
             } else if (index >= 0) {
@@ -63,15 +73,15 @@ public class Main {
             }
         }
 
-        String bull = bulls == 1 ? "bull" : "bulls";
-        String cow = cows == 1 ? "cow" : "cows";
+        String bullStr = bulls == 1 ? "bull" : "bulls";
+        String cowStr = cows == 1 ? "cow" : "cows";
 
         if (bulls != 0 && cows != 0) {
-            System.out.println("Grade: " + bulls + " " + bull + " and " + cows + " " + cow);
+            System.out.println("Grade: " + bulls + " " + bullStr + " and " + cows + " " + cowStr);
         } else if (bulls != 0) {
-            System.out.println("Grade: " + bulls + " " + bull);
+            System.out.println("Grade: " + bulls + " " + bullStr);
         } else if (cows != 0) {
-            System.out.println("Grade: " + cows + " " + cow);
+            System.out.println("Grade: " + cows + " " + cowStr);
         } else {
             System.out.println("Grade: None");
         }
